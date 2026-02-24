@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SideBar from "./components/sidebar";
+import SideBar from "./components/Sidebar";
 import { QueryProvider } from "./components/QueryProvider";
 
 export const metadata: Metadata = {
