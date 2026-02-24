@@ -1,0 +1,34 @@
+import { ButtonHTMLAttributes } from "react";
+
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: "primary" | "outline" | "ghost";
+  size?: "sm" | "md";
+}
+
+const variantStyles = {
+  primary: "bg-blue-600 text-white hover:bg-blue-700",
+  outline: "border border-gray-300 hover:bg-gray-100",
+  ghost: "hover:bg-gray-100",
+};
+
+const sizeStyles = {
+  sm: "px-3 py-1 text-sm",
+  md: "px-4 py-2 text-sm",
+};
+
+export default function Button({
+  variant = "primary",
+  size = "md",
+  className = "",
+  children,
+  ...props
+}: ButtonProps) {
+  return (
+    <button
+      className={`rounded disabled:opacity-40 transition-colors ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+}
