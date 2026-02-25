@@ -77,7 +77,11 @@ export default function EditUserForm({ userInfo }: { userInfo: UserType }) {
         <Button onClick={handleUpdate} disabled={isUpdating}>
           수정
         </Button>
-        <Button variant="warning" onClick={handleDelete} disabled={isDeleting}>
+        <Button
+          variant="warning"
+          onClick={handleDelete}
+          disabled={isDeleting || userInfo.status === "WITHDRAWN"}
+        >
           회원 만료
         </Button>
       </div>
