@@ -6,6 +6,7 @@ import Button from "../../components/commons/Button";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import AddUserForm from "./AddUserForm";
+import { formatDate } from "@/app/utils/date";
 
 export default function UserList({ urlPage }: { urlPage: number }) {
   const router = useRouter();
@@ -69,26 +70,30 @@ export default function UserList({ urlPage }: { urlPage: number }) {
                 >
                   <td className="text-gray-500">{user.id}</td>
                   <td>
-                    <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${user.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`}
+                    >
                       {user.status}
                     </span>
                   </td>
                   <td className="font-medium">{user.loginId}</td>
                   <td>{user.name}</td>
-                  <td className="text-center">{user.generation}</td>
+                  <td className="text-center">{user.generation}기</td>
                   <td>{user.partName}</td>
                   <td className="whitespace-nowrap">{user.phone}</td>
                   <td>
-                    <span className="px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-700">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs ${user.role === "ADMIN" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                    >
                       {user.role}
                     </span>
                   </td>
                   <td>{user.teamName}</td>
                   <td className="whitespace-nowrap text-gray-500 text-xs">
-                    {new Date(user.createdAt).toDateString()}
+                    {formatDate(user.createdAt)}
                   </td>
                   <td className="whitespace-nowrap text-gray-500 text-xs">
-                    {new Date(user.updatedAt).toDateString()}
+                    {formatDate(user.updatedAt)}
                   </td>
                 </tr>
               ))}
