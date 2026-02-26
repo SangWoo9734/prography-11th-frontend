@@ -1,55 +1,11 @@
 "use client";
 
 import Button from "@/app/components/Button";
-import { updateAttendance } from "@/app/api/attendance";
-import { AttandanceInfo, AttendanceStatusType } from "@/app/types/attendance";
+import { AttandanceInfo } from "@/app/types/attendance";
 import { formatDate } from "@/app/utils/date";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
 import { createPortal } from "react-dom";
-
-const MAX_LATE_LIMIT = 10;
-
-const LATE_MINUTE_OPTIONS = Array.from({ length: MAX_LATE_LIMIT }, (_, i) => i);
-
-type PenaltyType = "지각" | "결석" | "조퇴" | "기타";
-
-const PENALTY_OPTIONS: PenaltyType[] = ["지각", "결석", "조퇴", "기타"];
-
-function toPenaltyType(
-  status: AttendanceStatusType,
-  reason: string | null,
-): PenaltyType {
-  if (status === "LATE") return "지각";
-  if (status === "ABSENT") return "결석";
-  if (status === "EXCUSED" && reason === "조퇴") return "조퇴";
-  return "기타";
-}
-
-function toApiFields(
-  penaltyType: PenaltyType,
-  lateMinutes: number,
-  reason: string,
-) {
-  switch (penaltyType) {
-    case "지각":
-      return { status: "LATE" as AttendanceStatusType, lateMinutes };
-    case "결석":
-      return { status: "ABSENT" as AttendanceStatusType };
-    case "조퇴":
-      return { status: "EXCUSED" as AttendanceStatusType, reason: "조퇴" };
-    case "기타":
-      return {
-        status: "EXCUSED" as AttendanceStatusType,
-        ...(reason && { reason }),
-      };
-  }
-}
-
-const ERROR_MESSAGES: Record<string, string> = {
-  EXCUSE_LIMIT_EXCEEDED: "공결 가능 횟수(3회)를 초과했습니다.",
-  DEPOSIT_INSUFFICIENT: "보증금이 부족합니다.",
-};
+import { LATE_MINUTE_OPTIONS, MAX_LATE_LIMIT, PENALTY_OPTIONS } from "./attendanceFormUtils";
+import { useEditAttendanceForm } from "./useEditAttendanceForm";
 
 interface Props {
   item: AttandanceInfo;
@@ -57,41 +13,18 @@ interface Props {
   onClose: () => void;
 }
 
-export default function EditAttendanceModal({
-  item,
-  memberId,
-  onClose,
-}: Props) {
-  const queryClient = useQueryClient();
-
-  const initialPenaltyType = toPenaltyType(item.status, item.reason);
-  const [penaltyType, setPenaltyType] = useState<PenaltyType>(initialPenaltyType);
-  const [lateMinutes, setLateMinutes] = useState(item.lateMinutes ?? 1);
-  const [reason, setReason] = useState(
-    item.status === "EXCUSED" && item.reason !== "조퇴" ? (item.reason ?? "") : "",
-  );
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: () =>
-      updateAttendance(item.id, toApiFields(penaltyType, lateMinutes, reason)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendance", memberId] });
-      onClose();
-    },
-    onError: (err: Error & { code?: string }) => {
-      setErrorMsg(ERROR_MESSAGES[err.code ?? ""] ?? err.message);
-    },
-  });
-
-  const handleSubmit = () => {
-    if (penaltyType === "기타" && !reason.trim()) {
-      setErrorMsg("기타 사유를 입력해주세요.");
-      return;
-    }
-    setErrorMsg("");
-    mutate();
-  };
+export default function EditAttendanceModal({ item, memberId, onClose }: Props) {
+  const {
+    penaltyType,
+    setPenaltyType,
+    lateMinutes,
+    setLateMinutes,
+    reason,
+    setReason,
+    errorMsg,
+    isPending,
+    handleSubmit,
+  } = useEditAttendanceForm(item, memberId, onClose);
 
   return createPortal(
     <div className="fixed top-0 h-screen w-screen bg-gray-700/50 z-100">
@@ -115,7 +48,7 @@ export default function EditAttendanceModal({
               className="border border-gray-300 rounded px-3 py-2 text-sm flex-1"
               value={penaltyType}
               onChange={(e) => {
-                setPenaltyType(e.target.value as PenaltyType);
+                setPenaltyType(e.target.value as typeof penaltyType);
                 setReason("");
               }}
             >

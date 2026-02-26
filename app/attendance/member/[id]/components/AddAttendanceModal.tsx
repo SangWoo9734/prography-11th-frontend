@@ -2,39 +2,8 @@
 
 import Button from "@/app/components/Button";
 import { useModal } from "@/app/components/ModalProvider";
-import { createAttendance } from "@/app/api/attendance";
-import { getSessions } from "@/app/api/session";
-import { AttendanceStatusType } from "@/app/types/attendance";
-import { fmt } from "@/app/utils/date";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-
-const MAX_LATE_LIMIT = 10;
-
-const LATE_MINUTE_OPTIONS = Array.from({ length: MAX_LATE_LIMIT }, (_, i) => i);
-
-type PenaltyType = "지각" | "결석" | "조퇴" | "기타";
-
-const PENALTY_OPTIONS: PenaltyType[] = ["지각", "결석", "조퇴", "기타"];
-
-function toApiFields(penaltyType: PenaltyType, lateMinutes: number, reason: string) {
-  switch (penaltyType) {
-    case "지각":
-      return { status: "LATE" as AttendanceStatusType, lateMinutes };
-    case "결석":
-      return { status: "ABSENT" as AttendanceStatusType };
-    case "조퇴":
-      return { status: "EXCUSED" as AttendanceStatusType, reason: "조퇴" };
-    case "기타":
-      return { status: "EXCUSED" as AttendanceStatusType, ...(reason && { reason }) };
-  }
-}
-
-const ERROR_MESSAGES: Record<string, string> = {
-  ATTENDANCE_ALREADY_CHECKED: "이미 출결 기록이 존재합니다.",
-  EXCUSE_LIMIT_EXCEEDED: "공결 가능 횟수(3회)를 초과했습니다.",
-  DEPOSIT_INSUFFICIENT: "보증금이 부족합니다.",
-};
+import { LATE_MINUTE_OPTIONS, MAX_LATE_LIMIT, PENALTY_OPTIONS } from "./attendanceFormUtils";
+import { useAddAttendanceForm } from "./useAddAttendanceForm";
 
 interface Props {
   memberId: number;
@@ -42,54 +11,21 @@ interface Props {
 
 export default function AddAttendanceModal({ memberId }: Props) {
   const { toggleModal } = useModal();
-  const queryClient = useQueryClient();
 
-  const { today, thirtyDaysAgo } = useMemo(() => {
-    const now = new Date();
-    const past = new Date(now);
-    past.setDate(now.getDate() - 29);
-    return { today: fmt(now), thirtyDaysAgo: fmt(past) };
-  }, []);
-
-  const { data: sessions = [] } = useQuery({
-    queryKey: ["sessions", thirtyDaysAgo, today],
-    queryFn: () => getSessions(thirtyDaysAgo, today),
-  });
-
-  const [sessionId, setSessionId] = useState<number | null>(null);
-  const [penaltyType, setPenaltyType] = useState<PenaltyType>("지각");
-  const [lateMinutes, setLateMinutes] = useState(1);
-  const [reason, setReason] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: () =>
-      createAttendance({
-        sessionId: sessionId!,
-        memberId,
-        ...toApiFields(penaltyType, lateMinutes, reason),
-      }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendance", memberId] });
-      toggleModal();
-    },
-    onError: (err: Error & { code?: string }) => {
-      setErrorMsg(ERROR_MESSAGES[err.code ?? ""] ?? err.message);
-    },
-  });
-
-  const handleSubmit = () => {
-    if (!sessionId) {
-      setErrorMsg("세션을 선택해주세요.");
-      return;
-    }
-    if (penaltyType === "기타" && !reason.trim()) {
-      setErrorMsg("기타 사유를 입력해주세요.");
-      return;
-    }
-    setErrorMsg("");
-    mutate();
-  };
+  const {
+    sessions,
+    sessionId,
+    setSessionId,
+    penaltyType,
+    setPenaltyType,
+    lateMinutes,
+    setLateMinutes,
+    reason,
+    setReason,
+    errorMsg,
+    isPending,
+    handleSubmit,
+  } = useAddAttendanceForm(memberId, toggleModal);
 
   return (
     <div className="fixed top-0 h-screen w-screen bg-gray-700/50 z-100">
@@ -128,7 +64,7 @@ export default function AddAttendanceModal({ memberId }: Props) {
               className="border border-gray-300 rounded px-3 py-2 text-sm flex-1"
               value={penaltyType}
               onChange={(e) => {
-                setPenaltyType(e.target.value as PenaltyType);
+                setPenaltyType(e.target.value as typeof penaltyType);
                 setReason("");
               }}
             >
