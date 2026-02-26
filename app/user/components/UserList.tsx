@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useGetMembers } from "../../hooks/useGetMemebers";
 import Button from "../../components/Button";
+import Pagination from "../../components/Pagination";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import AddUserForm from "./AddUserForm";
@@ -120,27 +121,11 @@ export default function UserList({ urlPage }: { urlPage: number }) {
           </table>
         </div>
 
-        <div className="flex items-center justify-center gap-4 py-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.replace(`?page=${urlPage - 1}`)}
-            disabled={urlPage === 1}
-          >
-            이전
-          </Button>
-          <span className="text-sm text-gray-600">
-            {urlPage} / {totalPage}
-          </span>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => router.replace(`?page=${urlPage + 1}`)}
-            disabled={urlPage >= totalPage}
-          >
-            다음
-          </Button>
-        </div>
+        <Pagination
+          page={urlPage}
+          totalPages={totalPage}
+          onPageChange={(n) => router.replace(`?page=${n}`)}
+        />
       </div>
       {isModalOpen &&
         createPortal(

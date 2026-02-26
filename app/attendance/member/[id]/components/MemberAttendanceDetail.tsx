@@ -10,6 +10,8 @@ import {
 import { UserType } from "@/app/types/user";
 import { formatDate } from "@/app/utils/date";
 import EditAttendanceModal from "./EditAttendanceModal";
+import Pagination from "@/app/components/Pagination";
+import { usePagination } from "@/app/hooks/usePagination";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -42,14 +44,11 @@ export default function MemberAttendanceDetail({
   attendance: UserAttendance;
   member: UserType;
 }) {
-  const [page, setPage] = useState(1);
   const [editingItem, setEditingItem] = useState<AttandanceInfo | null>(null);
 
-  const totalItems = attendance.attendances.length;
-  const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
-  const paginatedItems = attendance.attendances.slice(
-    (page - 1) * ITEMS_PER_PAGE,
-    page * ITEMS_PER_PAGE,
+  const { page, setPage, totalPages, paginatedItems } = usePagination(
+    attendance.attendances,
+    ITEMS_PER_PAGE,
   );
 
   const thisWeekPenalty = getThisWeekPenalty(attendance.attendances);
@@ -67,12 +66,6 @@ export default function MemberAttendanceDetail({
   const absentCount = attendance.attendances.filter(
     (a) => a.status === "ABSENT",
   ).length;
-
-  const pageWindowStart = Math.floor((page - 1) / 5) * 5 + 1;
-  const pageNumbers = Array.from(
-    { length: Math.min(5, totalPages - pageWindowStart + 1) },
-    (_, i) => pageWindowStart + i,
-  );
 
   return (
     <>
@@ -230,46 +223,11 @@ export default function MemberAttendanceDetail({
         </div>
       </section>
 
-      {/* 페이지네이션 */}
-      <div className="flex items-center justify-center gap-1 text-sm py-2">
-        <button
-          className="px-2 py-1 hover:bg-gray-100 rounded disabled:opacity-30"
-          onClick={() => setPage(1)}
-          disabled={page === 1}
-        >
-          |&lt;
-        </button>
-        <button
-          className="px-2 py-1 hover:bg-gray-100 rounded disabled:opacity-30"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-        >
-          &lt;
-        </button>
-        {pageNumbers.map((n) => (
-          <button
-            key={n}
-            className={`px-3 py-1 rounded ${n === page ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}
-            onClick={() => setPage(n)}
-          >
-            {n}
-          </button>
-        ))}
-        <button
-          className="px-2 py-1 hover:bg-gray-100 rounded disabled:opacity-30"
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-        >
-          &gt;
-        </button>
-        <button
-          className="px-2 py-1 hover:bg-gray-100 rounded disabled:opacity-30"
-          onClick={() => setPage(totalPages)}
-          disabled={page === totalPages}
-        >
-          &gt;|
-        </button>
-      </div>
+      <Pagination
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
     </div>
 
     {editingItem && (
