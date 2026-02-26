@@ -12,7 +12,13 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    throw new Error(`${res.status} ${res.statusText}`);
+    const body = await res.json().catch(() => ({}));
+    const err = new Error(
+      body?.message ?? `${res.status} ${res.statusText}`,
+    ) as Error & { status: number; code: string };
+    err.status = res.status;
+    err.code = body?.code ?? "";
+    throw err;
   }
   const json = await res.json();
 
