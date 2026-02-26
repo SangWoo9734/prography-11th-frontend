@@ -1,21 +1,18 @@
 "use client";
 
-import { AttendanceRow, AttendanceStatus } from "@/app/types/attendance";
+import {
+  AttendanceRow,
+  AttendanceStatusText,
+  AttendanceStatusType,
+} from "@/app/types/attendance";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/app/utils/date";
 
-const statusStyle: Record<AttendanceStatus, string> = {
+const statusStyle: Record<AttendanceStatusType, string> = {
   PRESENT: "bg-green-100 text-green-700",
   ABSENT: "bg-red-100 text-red-700",
   LATE: "bg-amber-100 text-amber-700",
   EXCUSED: "bg-gray-100 text-gray-600",
-};
-
-const statusLabel: Record<AttendanceStatus, string> = {
-  PRESENT: "출석",
-  ABSENT: "결석",
-  LATE: "지각",
-  EXCUSED: "공결",
 };
 
 export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
@@ -47,7 +44,7 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
         {rows.map((row, i) => (
           <tr
             key={i}
-            className="border-b hover:bg-gray-50"
+            className={`border-b cursor-pointer ${row.penaltyAmount > 0 ? "bg-amber-50 hover:bg-amber-100" : "hover:bg-gray-50"}`}
             onClick={() => {
               router.push(`/attendance/member/${row.memberId}`);
             }}
@@ -61,13 +58,13 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
               <span
                 className={`px-2 py-1 rounded-full text-xs ${statusStyle[row.status]}`}
               >
-                {statusLabel[row.status]}
+                {AttendanceStatusText[row.status]}
               </span>
             </td>
             <td className="text-gray-500">
               {row.lateMinutes > 0 ? `${row.lateMinutes}분` : "-"}
             </td>
-            <td className="text-gray-500">
+            <td className={row.penaltyAmount > 0 ? "text-amber-600 font-medium" : "text-gray-500"}>
               {row.penaltyAmount > 0
                 ? `${row.penaltyAmount.toLocaleString()}원`
                 : "-"}
