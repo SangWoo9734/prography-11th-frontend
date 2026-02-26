@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/app/components/commons/Button";
+import Button from "@/app/components/Button";
 import { fmt } from "@/app/utils/date";
 import { useState } from "react";
 

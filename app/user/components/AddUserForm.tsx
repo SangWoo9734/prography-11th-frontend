@@ -6,7 +6,7 @@ import { useCreateMember } from "@/app/hooks/useCreateMember";
 import { AddUserFormData } from "@/app/types/userForm";
 import { useState } from "react";
 import UserForm from "./UserForm";
-import Button from "@/app/components/commons/Button";
+import Button from "@/app/components/Button";
 
 const PHONE_REGEX = /^\d{3}-\d{3,4}-\d{4}$/;
 
@@ -49,7 +49,15 @@ export default function AddUserForm({ onSuccess }: { onSuccess?: () => void }) {
     if (!name || !loginId || !password || !phone || !selectedGenerationId)
       return;
     create(
-      { name, loginId, password, phone, generationId: selectedGenerationId, partId, teamId },
+      {
+        name,
+        loginId,
+        password,
+        phone,
+        generationId: selectedGenerationId,
+        partId,
+        teamId,
+      },
       { onSuccess },
     );
   };

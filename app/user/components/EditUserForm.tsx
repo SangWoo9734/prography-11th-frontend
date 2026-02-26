@@ -8,7 +8,7 @@ import { UserType } from "@/app/types/user";
 import { EditUserFormData } from "@/app/types/userForm";
 import { useState } from "react";
 import UserForm from "./UserForm";
-import Button from "@/app/components/commons/Button";
+import Button from "@/app/components/Button";
 
 const PHONE_REGEX = /^\d{3}-\d{3,4}-\d{4}$/;
 
