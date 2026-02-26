@@ -57,26 +57,28 @@ export default function AttendanceSearchBar({
   };
 
   return (
-    <div className="flex justify-between items-center">
-      <div className="flex items-center gap-5">
-        <p className="text-lg font-bold mr-10">검색 항목</p>
+    <div className="flex flex-wrap items-center gap-3">
+      <p className="text-sm font-bold text-gray-800 whitespace-nowrap shrink-0">
+        검색 항목
+      </p>
 
-        <div className="flex items-center gap-1">
-          <input
-            type="date"
-            className="border border-gray-300 rounded px-2 py-1 text-sm w-40"
-            value={dateFrom}
-            onChange={(e) => setDateFrom(e.target.value)}
-          />
-          <span className="text-gray-400">~</span>
-          <input
-            type="date"
-            className="border border-gray-300 rounded px-2 py-1 text-sm w-40"
-            value={dateTo}
-            onChange={(e) => setDateTo(e.target.value)}
-          />
-        </div>
+      <div className="flex items-center gap-1 shrink-0">
+        <input
+          type="date"
+          className="border border-gray-200 rounded-lg px-2 py-1 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all bg-white"
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+        />
+        <span className="text-gray-400">~</span>
+        <input
+          type="date"
+          className="border border-gray-200 rounded-lg px-2 py-1 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all bg-white"
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+        />
+      </div>
 
+      <div className="flex items-center gap-1 shrink-0">
         <Button
           size="sm"
           variant={activePreset === "today" ? "primary" : "outline"}
@@ -100,7 +102,12 @@ export default function AttendanceSearchBar({
         </Button>
       </div>
 
-      <Button size="sm" onClick={handleSearch} disabled={!dateFrom || !dateTo}>
+      <Button
+        size="sm"
+        className="shrink-0 ml-auto"
+        onClick={handleSearch}
+        disabled={!dateFrom || !dateTo}
+      >
         검색
       </Button>
     </div>

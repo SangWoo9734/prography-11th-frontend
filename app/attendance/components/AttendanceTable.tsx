@@ -30,8 +30,8 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
   }
 
   return (
-    <table className="relative min-w-full text-sm text-left [&_th]:px-4 [&_th]:py-3 [&_th]:whitespace-nowrap [&_td]:px-4 [&_td]:py-3">
-      <thead className="bg-gray-100 text-gray-600 uppercase text-xs sticky top-0">
+    <table className="relative min-w-full text-sm text-left [&_th]:px-4 [&_th]:py-3 [&_th]:whitespace-nowrap [&_td]:px-4 [&_td]:py-3 border-separate border-spacing-0">
+      <thead className="bg-gray-50 text-gray-500 font-medium border-b border-gray-100 sticky top-0">
         <tr>
           <th>사용자명</th>
           <th>팀명</th>
@@ -45,7 +45,12 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
         {rows.map((row, i) => (
           <tr
             key={i}
-            className={cn("border-b cursor-pointer", row.penaltyAmount > 0 ? "bg-amber-50 hover:bg-amber-100" : "hover:bg-gray-50")}
+            className={cn(
+              "border-b border-gray-50 transition-colors cursor-pointer", 
+              row.penaltyAmount > 0 
+                ? "bg-amber-50/50 hover:bg-amber-100/50" 
+                : "hover:bg-blue-50/30"
+            )}
             onClick={() => {
               router.push(`/attendance/member/${row.memberId}`);
             }}

@@ -9,6 +9,7 @@ export function useGetMembers(
     queryKey: ["members", params.page, params.searchType, params.searchValue],
     queryFn: () => getMembers(params),
     enabled: options?.enabled,
+    keepPreviousData: true,
   });
 
   return {

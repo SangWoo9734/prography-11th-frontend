@@ -27,25 +27,25 @@ export default function EditAttendanceModal({ item, memberId, onClose }: Props) 
   } = useEditAttendanceForm(item, memberId, onClose);
 
   return createPortal(
-    <div className="fixed top-0 h-screen w-screen bg-gray-700/50 z-100">
-      <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-lg p-8 min-w-80 max-w-4/5 w-96">
+    <div className="fixed inset-0 bg-gray-900/40 backdrop-blur-sm z-100 flex items-center justify-center p-4">
+      <div className="bg-white rounded-2xl p-8 w-full max-w-md shadow-2xl border border-gray-100 relative animate-in fade-in zoom-in duration-200">
         <Button
           variant="ghost"
           size="sm"
-          className="absolute top-4 right-4"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
           onClick={onClose}
         >
           닫기
         </Button>
 
-        <div className="text-xl mb-2">출결 정보 수정</div>
-        <p className="text-sm text-gray-400 mb-6">{formatDate(item.createdAt)}</p>
+        <div className="text-xl font-bold text-gray-800 mb-2">출결 정보 수정</div>
+        <p className="text-sm font-medium text-blue-500 mb-8 border-b border-gray-50 pb-4">{formatDate(item.createdAt)}</p>
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
-            <p className="w-20 text-sm text-gray-500 shrink-0">패널티 종류</p>
+            <p className="w-20 text-sm font-bold text-gray-700 shrink-0">패널티 종류</p>
             <select
-              className="border border-gray-300 rounded px-3 py-2 text-sm flex-1"
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
               value={penaltyType}
               onChange={(e) => {
                 setPenaltyType(e.target.value as typeof penaltyType);
@@ -62,9 +62,9 @@ export default function EditAttendanceModal({ item, memberId, onClose }: Props) 
 
           {penaltyType === "지각" && (
             <div className="flex items-center gap-4">
-              <p className="w-20 text-sm text-gray-500 shrink-0">지각 시간</p>
+              <p className="w-20 text-sm font-bold text-gray-700 shrink-0">지각 시간</p>
               <select
-                className="border border-gray-300 rounded px-3 py-2 text-sm flex-1"
+                className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 value={lateMinutes}
                 onChange={(e) => setLateMinutes(Number(e.target.value))}
               >
@@ -80,10 +80,10 @@ export default function EditAttendanceModal({ item, memberId, onClose }: Props) 
 
           {penaltyType === "기타" && (
             <div className="flex items-center gap-4">
-              <p className="w-20 text-sm text-gray-500 shrink-0">사유</p>
+              <p className="w-20 text-sm font-bold text-gray-700 shrink-0">사유</p>
               <input
                 type="text"
-                className="border border-gray-300 rounded px-3 py-2 text-sm flex-1"
+                className="border border-gray-200 rounded-lg px-3 py-2 text-sm flex-1 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
                 placeholder="사유를 직접 입력해주세요"
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}

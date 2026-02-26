@@ -34,7 +34,7 @@ export default function UserSearch({ onSearch, onReset }: Props) {
   return (
     <div className="flex items-center gap-3">
       <select
-        className="border border-gray-300 rounded px-3 py-1.5 text-sm"
+        className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all cursor-pointer"
         value={searchType}
         onChange={(e) => setSearchType(e.target.value as SearchType)}
       >
@@ -46,7 +46,7 @@ export default function UserSearch({ onSearch, onReset }: Props) {
       </select>
       <input
         type="text"
-        className="border border-gray-300 rounded px-3 py-1.5 text-sm w-64"
+        className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all placeholder:text-gray-400"
         placeholder="검색어를 입력하세요"
         value={searchValue}
         onChange={(e) => setSearchValue(e.target.value)}

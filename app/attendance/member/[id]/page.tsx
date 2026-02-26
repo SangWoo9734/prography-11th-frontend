@@ -19,7 +19,7 @@ export default async function MemberAttendancePage({
 
   return (
     <ModalProvider modal={<AddAttendanceModal memberId={Number(id)} />}>
-      <div className="w-full flex flex-col">
+      <div className="w-full h-full flex flex-col">
         <AttendanceHeader />
         <div className="flex-1 overflow-scroll">
           <MemberAttendanceDetail attendance={attendance} member={member} />

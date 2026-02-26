@@ -15,10 +15,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="h-screen w-screen">
+      <body className="h-screen w-screen overflow-hidden">
         <div className="h-full flex">
           <SideBar />
-          <QueryProvider>{children}</QueryProvider>
+          <main className="flex-1 min-w-0 h-full overflow-hidden">
+            <QueryProvider>{children}</QueryProvider>
+          </main>
         </div>
       </body>
     </html>

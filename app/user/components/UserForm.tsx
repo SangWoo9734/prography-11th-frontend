@@ -1,13 +1,14 @@
 "use client";
 
+import { formatDate } from "@/app/utils/date";
 import { GenerationType } from "@/app/types/generation";
 
-const fieldClass = "flex flex-col gap-1";
-const labelClass = "text-sm text-gray-500";
+const fieldClass = "flex flex-col gap-1.5";
+const labelClass = "text-sm font-bold text-gray-700 ml-0.5";
 const inputClass =
-  "border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400";
+  "border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all placeholder:text-gray-300";
 const readOnlyInputClass =
-  "border border-gray-200 rounded px-3 py-2 text-sm bg-gray-50 text-gray-400 cursor-not-allowed";
+  "border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50/50 text-gray-500 cursor-not-allowed border-dashed";
 
 interface UserFormProps {
   generations: GenerationType[];
@@ -165,7 +166,7 @@ export default function UserForm({
           <input
             className={readOnlyInputClass}
             type="text"
-            defaultValue={defaultValues.createdAt}
+            value={formatDate(defaultValues.createdAt)}
             readOnly
           />
         </div>

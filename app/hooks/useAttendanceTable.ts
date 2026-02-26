@@ -15,12 +15,14 @@ export function useAttendanceTable(
     queryFn: () => getMembers({ page: 0, size: 1000 }),
     enabled,
     staleTime: 5 * 60 * 1000,
+    keepPreviousData: true,
   });
 
   const sessionsQuery = useQuery({
     queryKey: ["sessions", dateFrom, dateTo],
     queryFn: () => getSessions(dateFrom!, dateTo!),
     enabled,
+    keepPreviousData: true,
   });
 
   const attendanceQueries = useQueries({
@@ -35,6 +37,11 @@ export function useAttendanceTable(
     membersQuery.isLoading ||
     sessionsQuery.isLoading ||
     attendanceQueries.some((q) => q.isLoading);
+
+  const isFetching =
+    membersQuery.isFetching ||
+    sessionsQuery.isFetching ||
+    attendanceQueries.some((q) => q.isFetching);
 
   const memberMap = new Map(
     membersQuery.data?.content.map((m) => [
@@ -62,5 +69,5 @@ export function useAttendanceTable(
     });
   }
 
-  return { rows, isLoading, enabled };
+  return { rows, isLoading, isFetching, enabled };
 }

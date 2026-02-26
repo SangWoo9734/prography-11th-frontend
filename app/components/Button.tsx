@@ -7,10 +7,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variantStyles = {
-  primary: "border border-blue-600 bg-blue-600 text-white hover:bg-blue-700",
-  outline: "border border-gray-300 hover:bg-gray-100",
-  ghost: "hover:bg-gray-100",
-  warning: "border border-red-600 bg-red-600 text-white hover:bg-red-700",
+  primary: "border border-blue-600 bg-blue-600 text-white hover:bg-blue-700 shadow-sm shadow-blue-500/20",
+  outline: "border border-gray-200 hover:bg-gray-50 text-gray-700",
+  ghost: "hover:bg-gray-100 text-gray-600",
+  warning: "border border-red-600 bg-red-600 text-white hover:bg-red-700 shadow-sm shadow-red-500/20",
 };
 
 const sizeStyles = {
@@ -27,7 +27,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={cn("rounded disabled:opacity-40 transition-colors", variantStyles[variant], sizeStyles[size], className)}
+      className={cn("rounded-lg disabled:opacity-40 transition-all duration-200 active:scale-[0.98]", variantStyles[variant], sizeStyles[size], className)}
       {...props}
     >
       {children}

@@ -18,15 +18,15 @@ import { usePagination } from "@/app/hooks/usePagination";
 const ITEMS_PER_PAGE = 10;
 
 const STATUS_STYLE: Record<AttendanceStatusType, string> = {
-  PRESENT: "bg-green-100 text-green-700",
-  ABSENT: "bg-red-100 text-red-700",
-  LATE: "bg-amber-100 text-amber-700",
-  EXCUSED: "bg-gray-100 text-gray-600",
+  PRESENT: "bg-green-50 text-green-600 border border-green-100",
+  ABSENT: "bg-red-50 text-red-600 border border-red-100",
+  LATE: "bg-amber-50 text-amber-600 border border-amber-100",
+  EXCUSED: "bg-gray-50 text-gray-500 border border-gray-100",
 };
 
 const LABEL_CELL =
-  "px-4 py-3 bg-gray-50 font-medium text-gray-700 whitespace-nowrap";
-const VALUE_CELL = "px-4 py-3";
+  "px-4 py-3 bg-gray-50/50 font-bold text-gray-700 whitespace-nowrap text-xs uppercase tracking-wider";
+const VALUE_CELL = "px-4 py-3 text-gray-900";
 
 export default function MemberAttendanceDetail({
   attendance,
@@ -47,34 +47,34 @@ export default function MemberAttendanceDetail({
       <div className="flex flex-col gap-6 p-6">
         {/* 회원 정보 */}
         <section>
-          <h2 className="text-sm text-gray-500 mb-2">회원 정보</h2>
-          <div className="border rounded-lg divide-y text-sm overflow-hidden">
-            <div className="grid grid-cols-2 divide-x">
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+          <h2 className="text-sm font-bold text-gray-700 mb-3 ml-1">회원 정보</h2>
+          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm divide-y divide-gray-50 text-sm overflow-hidden">
+            <div className="grid grid-cols-2 divide-x divide-gray-50">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>이름</span>
                 <span className={VALUE_CELL}>{attendance.memberName}</span>
               </div>
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>기수</span>
                 <span className={VALUE_CELL}>{attendance.generation}기</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 divide-x">
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+            <div className="grid grid-cols-2 divide-x divide-gray-50">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>ID</span>
                 <span className={VALUE_CELL}>{member.loginId}</span>
               </div>
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>파트</span>
                 <span className={VALUE_CELL}>{attendance.partName}</span>
               </div>
             </div>
-            <div className="grid grid-cols-2 divide-x">
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+            <div className="grid grid-cols-2 divide-x divide-gray-50">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>핸드폰 번호</span>
                 <span className={VALUE_CELL}>{member.phone}</span>
               </div>
-              <div className="grid grid-cols-[140px_1fr] divide-x">
+              <div className="grid grid-cols-[140px_1fr] divide-x divide-gray-50">
                 <span className={LABEL_CELL}>참여팀</span>
                 <span className={VALUE_CELL}>{attendance.teamName}</span>
               </div>
@@ -86,17 +86,17 @@ export default function MemberAttendanceDetail({
 
         {/* 출결 정보 */}
         <section>
-          <h2 className="text-sm text-gray-500 mb-2">출결 정보</h2>
-          <div className="border rounded-lg overflow-hidden">
+          <h2 className="text-sm font-bold text-gray-700 mb-3 ml-1">출결 정보</h2>
+          <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
             <table className="min-w-full text-sm text-left [&_th]:px-4 [&_th]:py-3 [&_td]:px-4 [&_td]:py-3">
-              <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+              <thead className="bg-gray-50/50 text-gray-500 font-bold uppercase text-xs border-b border-gray-100">
                 <tr>
                   <th>날짜</th>
                   <th>출석 여부</th>
                   <th>지각 시간</th>
                   <th>벌금</th>
                   <th>사유</th>
-                  <th></th>
+                  <th className="text-right">관리</th>
                 </tr>
               </thead>
               <tbody>
@@ -128,9 +128,9 @@ export default function MemberAttendanceDetail({
                           : "-"}
                       </td>
                       <td className="text-gray-500">{item.reason ?? "-"}</td>
-                      <td>
+                      <td className="text-right">
                         <button
-                          className="text-xs text-blue-500 hover:underline"
+                          className="px-3 py-1 text-xs font-medium text-blue-600 bg-blue-50 border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors"
                           onClick={() => setEditingItem(item)}
                         >
                           수정

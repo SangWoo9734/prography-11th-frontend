@@ -73,7 +73,7 @@ export default function EditUserForm({ userInfo }: { userInfo: UserType }) {
           createdAt: userInfo.createdAt,
         }}
       />
-      <div className="flex gap-2 px-5">
+      <div className="flex gap-2 pt-6 mt-4 border-t border-gray-100">
         <Button onClick={handleUpdate} disabled={isUpdating}>
           수정
         </Button>

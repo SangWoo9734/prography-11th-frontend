@@ -23,20 +23,26 @@ export default function UserList({ urlPage }: { urlPage: number }) {
     { enabled: urlPage >= 1 },
   );
 
-  const handleSearch = useCallback((type: SearchType, value: string) => {
-    setSearchType(type);
-    setSearchValue(value);
-    router.replace("?page=1");
-  }, [router]);
+  const handleSearch = useCallback(
+    (type: SearchType, value: string) => {
+      setSearchType(type);
+      setSearchValue(value);
+      router.replace("?page=1");
+    },
+    [router],
+  );
 
   const handleReset = useCallback(() => {
     setSearchValue("");
     router.replace("?page=1");
   }, [router]);
 
-  const handlePageChange = useCallback((n: number) => {
-    router.replace(`?page=${n}`);
-  }, [router]);
+  const handlePageChange = useCallback(
+    (n: number) => {
+      router.replace(`?page=${n}`);
+    },
+    [router],
+  );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -58,20 +64,20 @@ export default function UserList({ urlPage }: { urlPage: number }) {
 
   return (
     <>
-      <div className="w-full flex flex-col">
-        <div className="w-full px-4 py-3 border-b-2 flex items-center justify-between">
-          <h1 className="text-2xl">회원 관리</h1>
+      <div className="w-full h-full flex flex-col">
+        <div className="w-full px-6 py-4 border-b border-gray-100 flex items-center justify-between shrink-0 bg-white shadow-sm">
+          <h1 className="text-xl font-bold text-gray-800">회원 관리</h1>
           <Button size="sm" onClick={() => setIsModalOpen(true)}>
             추가
           </Button>
         </div>
-        <div className="px-4 py-3 border-b">
+        <div className="px-6 py-3 border-b border-gray-50 flex-shrink-0 bg-gray-50/30">
           <UserSearch onSearch={handleSearch} onReset={handleReset} />
         </div>
 
-        <div className="w-full overflow-x-auto">
-          <table className="relative min-w-full w-fit text-sm text-left [&_th]:px-4 [&_th]:py-3 [&_th]:whitespace-nowrap [&_td]:px-4 [&_td]:py-3">
-            <thead className="sticky top-0 bg-gray-100 text-gray-600 uppercase text-xs">
+        <div className="flex-1 overflow-auto">
+          <table className="relative min-w-full w-fit text-sm text-left [&_th]:px-4 [&_th]:py-3 [&_th]:whitespace-nowrap [&_td]:px-4 [&_td]:py-3 border-separate border-spacing-0">
+            <thead className="sticky top-0 bg-gray-50/80 backdrop-blur-sm text-gray-500 font-medium border-b border-gray-100">
               <tr>
                 <th>Id</th>
                 <th>Status</th>
@@ -90,13 +96,18 @@ export default function UserList({ urlPage }: { urlPage: number }) {
               {userList.map((user) => (
                 <tr
                   key={user.id}
-                  className="border-b hover:bg-gray-50 cursor-pointer"
+                  className="border-b border-gray-50 hover:bg-blue-50/30 transition-colors cursor-pointer"
                   onClick={() => router.push(`/user/${user.id}`)}
                 >
                   <td className="text-gray-500">{user.id}</td>
                   <td>
                     <span
-                      className={cn("px-2 py-1 rounded-full text-xs", user.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700")}
+                      className={cn(
+                        "px-2 py-1 rounded-full text-xs",
+                        user.status === "ACTIVE"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-gray-100 text-gray-700",
+                      )}
                     >
                       {user.status}
                     </span>
@@ -108,7 +119,12 @@ export default function UserList({ urlPage }: { urlPage: number }) {
                   <td className="whitespace-nowrap">{user.phone}</td>
                   <td>
                     <span
-                      className={cn("px-2 py-1 rounded-full text-xs", user.role === "ADMIN" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700")}
+                      className={cn(
+                        "px-2 py-1 rounded-full text-xs",
+                        user.role === "ADMIN"
+                          ? "bg-amber-100 text-amber-700"
+                          : "bg-blue-100 text-blue-700",
+                      )}
                     >
                       {user.role}
                     </span>
@@ -126,16 +142,18 @@ export default function UserList({ urlPage }: { urlPage: number }) {
           </table>
         </div>
 
-        <Pagination
-          page={urlPage}
-          totalPages={totalPage}
-          onPageChange={handlePageChange}
-        />
+        <div className="shrink-0">
+          <Pagination
+            page={urlPage}
+            totalPages={totalPage}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
       {isModalOpen &&
         createPortal(
-          <div className="fixed top-0 h-screen w-screen bg-gray-700/50 z-100">
-            <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-lg p-8 min-w-80 max-w-4/5">
+          <div className="fixed top-0 h-screen w-screen bg-gray-900/40 backdrop-blur-sm z-100 transition-all">
+            <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-2xl p-8 min-w-[400px] max-w-4/5 shadow-2xl border border-gray-100">
               <Button
                 variant="ghost"
                 size="sm"
@@ -144,7 +162,7 @@ export default function UserList({ urlPage }: { urlPage: number }) {
               >
                 닫기
               </Button>
-              <div className="text-xl mb-8">회원 추가</div>
+              <div className="text-xl font-bold text-gray-800 mb-8 border-b pb-4 border-gray-50">회원 추가</div>
               <AddUserForm onSuccess={() => setIsModalOpen(false)} />
             </div>
           </div>,
