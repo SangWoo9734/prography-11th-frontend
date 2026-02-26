@@ -12,6 +12,7 @@ import { formatDate } from "@/app/utils/date";
 import EditAttendanceModal from "./EditAttendanceModal";
 import Pagination from "@/app/components/Pagination";
 import { usePagination } from "@/app/hooks/usePagination";
+import { cn } from "@/app/utils/cn";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -193,7 +194,7 @@ export default function MemberAttendanceDetail({
                     </td>
                     <td>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${STATUS_STYLE[item.status]}`}
+                        className={cn("px-2 py-1 rounded-full text-xs", STATUS_STYLE[item.status])}
                       >
                         {ATTENDANCE_STATUS_TEXT[item.status]}
                       </span>

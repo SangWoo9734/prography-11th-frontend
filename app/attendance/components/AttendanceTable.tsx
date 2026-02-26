@@ -7,6 +7,7 @@ import {
 } from "@/app/types/attendance";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/app/utils/date";
+import { cn } from "@/app/utils/cn";
 
 const STATUS_STYLE: Record<AttendanceStatusType, string> = {
   PRESENT: "bg-green-100 text-green-700",
@@ -44,7 +45,7 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
         {rows.map((row, i) => (
           <tr
             key={i}
-            className={`border-b cursor-pointer ${row.penaltyAmount > 0 ? "bg-amber-50 hover:bg-amber-100" : "hover:bg-gray-50"}`}
+            className={cn("border-b cursor-pointer", row.penaltyAmount > 0 ? "bg-amber-50 hover:bg-amber-100" : "hover:bg-gray-50")}
             onClick={() => {
               router.push(`/attendance/member/${row.memberId}`);
             }}
@@ -56,7 +57,7 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
             </td>
             <td>
               <span
-                className={`px-2 py-1 rounded-full text-xs ${STATUS_STYLE[row.status]}`}
+                className={cn("px-2 py-1 rounded-full text-xs", STATUS_STYLE[row.status])}
               >
                 {ATTENDANCE_STATUS_TEXT[row.status]}
               </span>
@@ -64,7 +65,7 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
             <td className="text-gray-500">
               {row.lateMinutes > 0 ? `${row.lateMinutes}분` : "-"}
             </td>
-            <td className={row.penaltyAmount > 0 ? "text-amber-600 font-medium" : "text-gray-500"}>
+            <td className={cn(row.penaltyAmount > 0 ? "text-amber-600 font-medium" : "text-gray-500")}>
               {row.penaltyAmount > 0
                 ? `${row.penaltyAmount.toLocaleString()}원`
                 : "-"}
