@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { useGetMembers } from "../../hooks/useGetMemebers";
 import Button from "../../components/Button";
 import Pagination from "../../components/Pagination";
-import { useState } from "react";
+import { useState, useCallback } from "react";
+import { cn } from "@/app/utils/cn";
 import { createPortal } from "react-dom";
 import AddUserForm from "./AddUserForm";
 import UserSearch from "./UserSearch";
@@ -22,16 +23,20 @@ export default function UserList({ urlPage }: { urlPage: number }) {
     { enabled: urlPage >= 1 },
   );
 
-  const handleSearch = (type: SearchType, value: string) => {
+  const handleSearch = useCallback((type: SearchType, value: string) => {
     setSearchType(type);
     setSearchValue(value);
     router.replace("?page=1");
-  };
+  }, [router]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setSearchValue("");
     router.replace("?page=1");
-  };
+  }, [router]);
+
+  const handlePageChange = useCallback((n: number) => {
+    router.replace(`?page=${n}`);
+  }, [router]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -91,7 +96,7 @@ export default function UserList({ urlPage }: { urlPage: number }) {
                   <td className="text-gray-500">{user.id}</td>
                   <td>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${user.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"}`}
+                      className={cn("px-2 py-1 rounded-full text-xs", user.status === "ACTIVE" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700")}
                     >
                       {user.status}
                     </span>
@@ -103,7 +108,7 @@ export default function UserList({ urlPage }: { urlPage: number }) {
                   <td className="whitespace-nowrap">{user.phone}</td>
                   <td>
                     <span
-                      className={`px-2 py-1 rounded-full text-xs ${user.role === "ADMIN" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700"}`}
+                      className={cn("px-2 py-1 rounded-full text-xs", user.role === "ADMIN" ? "bg-amber-100 text-amber-700" : "bg-blue-100 text-blue-700")}
                     >
                       {user.role}
                     </span>
@@ -124,7 +129,7 @@ export default function UserList({ urlPage }: { urlPage: number }) {
         <Pagination
           page={urlPage}
           totalPages={totalPage}
-          onPageChange={(n) => router.replace(`?page=${n}`)}
+          onPageChange={handlePageChange}
         />
       </div>
       {isModalOpen &&
