@@ -10,7 +10,7 @@ import { createPortal } from "react-dom";
 
 const MAX_LATE_LIMIT = 10;
 
-const lateMinuteOptions = Array.from({ length: MAX_LATE_LIMIT }, (_, i) => i);
+const LATE_MINUTE_OPTIONS = Array.from({ length: MAX_LATE_LIMIT }, (_, i) => i);
 
 type PenaltyType = "지각" | "결석" | "조퇴" | "기타";
 
@@ -135,7 +135,7 @@ export default function EditAttendanceModal({
                 value={lateMinutes}
                 onChange={(e) => setLateMinutes(Number(e.target.value))}
               >
-                {lateMinuteOptions.map((_, i) => (
+                {LATE_MINUTE_OPTIONS.map((_, i) => (
                   <option key={i + 1} value={i + 1}>
                     {i + 1}분
                   </option>

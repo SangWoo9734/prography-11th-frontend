@@ -1,13 +1,13 @@
-export const AttendanceStatus = [
+export const ATTENDANCE_STATUSES = [
   "PRESENT",
   "ABSENT",
   "LATE",
   "EXCUSED",
 ] as const;
 
-export type AttendanceStatusType = (typeof AttendanceStatus)[number];
+export type AttendanceStatusType = (typeof ATTENDANCE_STATUSES)[number];
 
-export const AttendanceStatusText: Record<AttendanceStatusType, string> = {
+export const ATTENDANCE_STATUS_TEXT: Record<AttendanceStatusType, string> = {
   PRESENT: "출석",
   ABSENT: "결석",
   LATE: "지각",

@@ -5,7 +5,7 @@ import {
   UserAttendance,
   AttandanceInfo,
   AttendanceStatusType,
-  AttendanceStatusText,
+  ATTENDANCE_STATUS_TEXT,
 } from "@/app/types/attendance";
 import { UserType } from "@/app/types/user";
 import { formatDate } from "@/app/utils/date";
@@ -13,7 +13,7 @@ import EditAttendanceModal from "./EditAttendanceModal";
 
 const ITEMS_PER_PAGE = 10;
 
-const statusStyle: Record<AttendanceStatusType, string> = {
+const STATUS_STYLE: Record<AttendanceStatusType, string> = {
   PRESENT: "bg-green-100 text-green-700",
   ABSENT: "bg-red-100 text-red-700",
   LATE: "bg-amber-100 text-amber-700",
@@ -31,9 +31,9 @@ function getThisWeekPenalty(attendances: AttandanceInfo[]) {
     .reduce((sum, a) => sum + a.penaltyAmount, 0);
 }
 
-const labelCell =
+const LABEL_CELL =
   "px-4 py-3 bg-gray-50 font-medium text-gray-700 whitespace-nowrap";
-const valueCell = "px-4 py-3";
+const VALUE_CELL = "px-4 py-3";
 
 export default function MemberAttendanceDetail({
   attendance,
@@ -83,32 +83,32 @@ export default function MemberAttendanceDetail({
         <div className="border rounded-lg divide-y text-sm overflow-hidden">
           <div className="grid grid-cols-2 divide-x">
             <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>이름</span>
-              <span className={valueCell}>{attendance.memberName}</span>
+              <span className={LABEL_CELL}>이름</span>
+              <span className={VALUE_CELL}>{attendance.memberName}</span>
             </div>
             <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>기수</span>
-              <span className={valueCell}>{attendance.generation}기</span>
-            </div>
-          </div>
-          <div className="grid grid-cols-2 divide-x">
-            <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>ID</span>
-              <span className={valueCell}>{member.loginId}</span>
-            </div>
-            <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>파트</span>
-              <span className={valueCell}>{attendance.partName}</span>
+              <span className={LABEL_CELL}>기수</span>
+              <span className={VALUE_CELL}>{attendance.generation}기</span>
             </div>
           </div>
           <div className="grid grid-cols-2 divide-x">
             <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>핸드폰 번호</span>
-              <span className={valueCell}>{member.phone}</span>
+              <span className={LABEL_CELL}>ID</span>
+              <span className={VALUE_CELL}>{member.loginId}</span>
             </div>
             <div className="grid grid-cols-[140px_1fr] divide-x">
-              <span className={labelCell}>참여팀</span>
-              <span className={valueCell}>{attendance.teamName}</span>
+              <span className={LABEL_CELL}>파트</span>
+              <span className={VALUE_CELL}>{attendance.partName}</span>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 divide-x">
+            <div className="grid grid-cols-[140px_1fr] divide-x">
+              <span className={LABEL_CELL}>핸드폰 번호</span>
+              <span className={VALUE_CELL}>{member.phone}</span>
+            </div>
+            <div className="grid grid-cols-[140px_1fr] divide-x">
+              <span className={LABEL_CELL}>참여팀</span>
+              <span className={VALUE_CELL}>{attendance.teamName}</span>
             </div>
           </div>
         </div>
@@ -152,18 +152,18 @@ export default function MemberAttendanceDetail({
         <h2 className="text-sm text-gray-500 mb-2">벌금 현황</h2>
         <div className="border rounded-lg divide-y text-sm overflow-hidden">
           <div className="grid grid-cols-[200px_1fr] divide-x">
-            <span className={labelCell}>이번주 지각비</span>
-            <span className={valueCell}>
+            <span className={LABEL_CELL}>이번주 지각비</span>
+            <span className={VALUE_CELL}>
               {thisWeekPenalty.toLocaleString()}원
             </span>
           </div>
           <div className="grid grid-cols-[200px_1fr] divide-x">
-            <span className={labelCell}>누적 지각비</span>
-            <span className={valueCell}>{totalPenalty.toLocaleString()}원</span>
+            <span className={LABEL_CELL}>누적 지각비</span>
+            <span className={VALUE_CELL}>{totalPenalty.toLocaleString()}원</span>
           </div>
           <div className="grid grid-cols-[200px_1fr] divide-x">
-            <span className={labelCell}>잔여 보증금</span>
-            <span className={valueCell}>
+            <span className={LABEL_CELL}>잔여 보증금</span>
+            <span className={VALUE_CELL}>
               {attendance.deposit.toLocaleString()}원
             </span>
           </div>
@@ -200,9 +200,9 @@ export default function MemberAttendanceDetail({
                     </td>
                     <td>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs ${statusStyle[item.status]}`}
+                        className={`px-2 py-1 rounded-full text-xs ${STATUS_STYLE[item.status]}`}
                       >
-                        {AttendanceStatusText[item.status]}
+                        {ATTENDANCE_STATUS_TEXT[item.status]}
                       </span>
                     </td>
                     <td className="text-gray-500">

@@ -2,13 +2,13 @@
 
 import {
   AttendanceRow,
-  AttendanceStatusText,
+  ATTENDANCE_STATUS_TEXT,
   AttendanceStatusType,
 } from "@/app/types/attendance";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/app/utils/date";
 
-const statusStyle: Record<AttendanceStatusType, string> = {
+const STATUS_STYLE: Record<AttendanceStatusType, string> = {
   PRESENT: "bg-green-100 text-green-700",
   ABSENT: "bg-red-100 text-red-700",
   LATE: "bg-amber-100 text-amber-700",
@@ -56,9 +56,9 @@ export default function AttendanceTable({ rows }: { rows: AttendanceRow[] }) {
             </td>
             <td>
               <span
-                className={`px-2 py-1 rounded-full text-xs ${statusStyle[row.status]}`}
+                className={`px-2 py-1 rounded-full text-xs ${STATUS_STYLE[row.status]}`}
               >
-                {AttendanceStatusText[row.status]}
+                {ATTENDANCE_STATUS_TEXT[row.status]}
               </span>
             </td>
             <td className="text-gray-500">
