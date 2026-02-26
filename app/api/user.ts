@@ -1,10 +1,13 @@
 import { UserType } from "../types/user";
 import { apiClient } from "./client";
 
+export type SearchType = "name" | "teamName" | "partName";
+
 export interface GetMemberParams {
   page?: number;
   size?: number;
-  // searchType: string; searchValue: string, generation, partName, teamName, status
+  searchType?: SearchType;
+  searchValue?: string;
 }
 
 export interface MembersResponse {
@@ -15,8 +18,17 @@ export interface MembersResponse {
   totalPages: number;
 }
 
-export const getMembers = async ({ page = 0, size = 10 }: GetMemberParams) => {
+export const getMembers = async ({
+  page = 0,
+  size = 10,
+  searchType,
+  searchValue,
+}: GetMemberParams) => {
   const query = new URLSearchParams({ page: String(page), size: String(size) });
+  if (searchType && searchValue) {
+    query.set("searchType", searchType);
+    query.set("searchValue", searchValue);
+  }
   return await apiClient.get<MembersResponse>(`/api/v1/admin/members?${query}`);
 };
 

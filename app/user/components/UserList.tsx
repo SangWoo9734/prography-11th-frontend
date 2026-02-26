@@ -2,19 +2,35 @@
 
 import { useRouter } from "next/navigation";
 import { useGetMembers } from "../../hooks/useGetMemebers";
-import Button from "../../components/commons/Button";
+import Button from "../../components/Button";
 import { useState } from "react";
 import { createPortal } from "react-dom";
 import AddUserForm from "./AddUserForm";
+import UserSearch from "./UserSearch";
 import { formatDate } from "@/app/utils/date";
+import { SearchType } from "@/app/api/user";
 
 export default function UserList({ urlPage }: { urlPage: number }) {
   const router = useRouter();
 
+  const [searchType, setSearchType] = useState<SearchType>("name");
+  const [searchValue, setSearchValue] = useState("");
+
   const { userList, totalPage, isLoading } = useGetMembers(
-    { page: urlPage - 1 },
+    { page: urlPage - 1, searchType, searchValue },
     { enabled: urlPage >= 1 },
   );
+
+  const handleSearch = (type: SearchType, value: string) => {
+    setSearchType(type);
+    setSearchValue(value);
+    router.replace("?page=1");
+  };
+
+  const handleReset = () => {
+    setSearchValue("");
+    router.replace("?page=1");
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -42,6 +58,9 @@ export default function UserList({ urlPage }: { urlPage: number }) {
           <Button size="sm" onClick={() => setIsModalOpen(true)}>
             추가
           </Button>
+        </div>
+        <div className="px-4 py-3 border-b">
+          <UserSearch onSearch={handleSearch} onReset={handleReset} />
         </div>
 
         <div className="w-full overflow-x-auto">

@@ -6,7 +6,7 @@ export function useGetMembers(
   options?: { enabled?: boolean },
 ) {
   const { data, isInitialLoading } = useQuery({
-    queryKey: ["members", params.page],
+    queryKey: ["members", params.page, params.searchType, params.searchValue],
     queryFn: () => getMembers(params),
     enabled: options?.enabled,
   });
