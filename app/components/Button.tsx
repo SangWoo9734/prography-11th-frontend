@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes } from "react";
+import { cn } from "@/app/utils/cn";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "outline" | "ghost" | "warning";
@@ -26,7 +27,7 @@ export default function Button({
 }: ButtonProps) {
   return (
     <button
-      className={`rounded disabled:opacity-40 transition-colors ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={cn("rounded disabled:opacity-40 transition-colors", variantStyles[variant], sizeStyles[size], className)}
       {...props}
     >
       {children}

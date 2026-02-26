@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from "@/app/utils/cn";
+
 interface Props {
   page: number;
   totalPages: number;
@@ -32,7 +34,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
       {pageNumbers.map((n) => (
         <button
           key={n}
-          className={`px-3 py-1 rounded ${n === page ? "bg-blue-600 text-white" : "hover:bg-gray-100"}`}
+          className={cn("px-3 py-1 rounded", n === page ? "bg-blue-600 text-white" : "hover:bg-gray-100")}
           onClick={() => onPageChange(n)}
         >
           {n}
