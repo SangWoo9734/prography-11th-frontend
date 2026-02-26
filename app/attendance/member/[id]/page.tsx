@@ -1,6 +1,9 @@
 import { getAttendanceByMember } from "@/app/api/attendance";
 import { getMember } from "@/app/api/user";
 import MemberAttendanceDetail from "./components/MemberAttendanceDetail";
+import ModalProvider from "@/app/components/ModalProvider";
+import AddAttendanceModal from "./components/AddAttendanceModal";
+import AttendanceHeader from "./components/AttendanceHeader";
 
 export default async function MemberAttendancePage({
   params,
@@ -15,13 +18,13 @@ export default async function MemberAttendancePage({
   ]);
 
   return (
-    <div className="w-full flex flex-col">
-      <div className="w-full px-4 py-3 border-b-2">
-        <h1 className="text-2xl">출결 관리 / 출결 내역 상세</h1>
+    <ModalProvider modal={<AddAttendanceModal memberId={Number(id)} />}>
+      <div className="w-full flex flex-col">
+        <AttendanceHeader />
+        <div className="flex-1 overflow-scroll">
+          <MemberAttendanceDetail attendance={attendance} member={member} />
+        </div>
       </div>
-      <div className="flex-1 overflow-scroll">
-        <MemberAttendanceDetail attendance={attendance} member={member} />
-      </div>
-    </div>
+    </ModalProvider>
   );
 }

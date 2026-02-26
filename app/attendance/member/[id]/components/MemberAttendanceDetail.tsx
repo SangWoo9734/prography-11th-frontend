@@ -1,24 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { UserAttendance, AttandanceInfo, AttendanceStatus } from "@/app/types/attendance";
+import {
+  UserAttendance,
+  AttandanceInfo,
+  AttendanceStatusType,
+  AttendanceStatusText,
+} from "@/app/types/attendance";
 import { UserType } from "@/app/types/user";
 import { formatDate } from "@/app/utils/date";
+import EditAttendanceModal from "./EditAttendanceModal";
 
 const ITEMS_PER_PAGE = 10;
 
-const statusStyle: Record<AttendanceStatus, string> = {
+const statusStyle: Record<AttendanceStatusType, string> = {
   PRESENT: "bg-green-100 text-green-700",
   ABSENT: "bg-red-100 text-red-700",
   LATE: "bg-amber-100 text-amber-700",
   EXCUSED: "bg-gray-100 text-gray-600",
-};
-
-const statusLabel: Record<AttendanceStatus, string> = {
-  PRESENT: "출석",
-  ABSENT: "결석",
-  LATE: "지각",
-  EXCUSED: "공결",
 };
 
 function getThisWeekPenalty(attendances: AttandanceInfo[]) {
@@ -32,7 +31,8 @@ function getThisWeekPenalty(attendances: AttandanceInfo[]) {
     .reduce((sum, a) => sum + a.penaltyAmount, 0);
 }
 
-const labelCell = "px-4 py-3 bg-gray-50 font-medium text-gray-700 whitespace-nowrap";
+const labelCell =
+  "px-4 py-3 bg-gray-50 font-medium text-gray-700 whitespace-nowrap";
 const valueCell = "px-4 py-3";
 
 export default function MemberAttendanceDetail({
@@ -43,6 +43,7 @@ export default function MemberAttendanceDetail({
   member: UserType;
 }) {
   const [page, setPage] = useState(1);
+  const [editingItem, setEditingItem] = useState<AttandanceInfo | null>(null);
 
   const totalItems = attendance.attendances.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
@@ -57,6 +58,16 @@ export default function MemberAttendanceDetail({
     0,
   );
 
+  const presentCount = attendance.attendances.filter(
+    (a) => a.status === "PRESENT",
+  ).length;
+  const lateCount = attendance.attendances.filter(
+    (a) => a.status === "LATE",
+  ).length;
+  const absentCount = attendance.attendances.filter(
+    (a) => a.status === "ABSENT",
+  ).length;
+
   const pageWindowStart = Math.floor((page - 1) / 5) * 5 + 1;
   const pageNumbers = Array.from(
     { length: Math.min(5, totalPages - pageWindowStart + 1) },
@@ -64,6 +75,7 @@ export default function MemberAttendanceDetail({
   );
 
   return (
+    <>
     <div className="flex flex-col gap-6 p-6">
       {/* 회원 정보 */}
       <section>
@@ -102,13 +114,48 @@ export default function MemberAttendanceDetail({
         </div>
       </section>
 
+      {/* 출결 현황 */}
+      <section>
+        <h2 className="text-sm text-gray-500 mb-2">출결 현황</h2>
+        <div className="border rounded-lg text-sm overflow-hidden">
+          <div className="grid grid-cols-4 divide-x">
+            <div className="flex flex-col items-center py-4 gap-1">
+              <span className="text-xs text-gray-500">출석</span>
+              <span className="text-lg font-semibold text-green-600">
+                {presentCount}
+              </span>
+            </div>
+            <div className="flex flex-col items-center py-4 gap-1">
+              <span className="text-xs text-gray-500">지각</span>
+              <span className="text-lg font-semibold text-amber-500">
+                {lateCount}
+              </span>
+            </div>
+            <div className="flex flex-col items-center py-4 gap-1">
+              <span className="text-xs text-gray-500">결석</span>
+              <span className="text-lg font-semibold text-red-500">
+                {absentCount}
+              </span>
+            </div>
+            <div className="flex flex-col items-center py-4 gap-1">
+              <span className="text-xs text-gray-500">공결</span>
+              <span className="text-lg font-semibold text-gray-500">
+                {attendance.excuseCount}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* 벌금 현황 */}
       <section>
         <h2 className="text-sm text-gray-500 mb-2">벌금 현황</h2>
         <div className="border rounded-lg divide-y text-sm overflow-hidden">
           <div className="grid grid-cols-[200px_1fr] divide-x">
             <span className={labelCell}>이번주 지각비</span>
-            <span className={valueCell}>{thisWeekPenalty.toLocaleString()}원</span>
+            <span className={valueCell}>
+              {thisWeekPenalty.toLocaleString()}원
+            </span>
           </div>
           <div className="grid grid-cols-[200px_1fr] divide-x">
             <span className={labelCell}>누적 지각비</span>
@@ -116,7 +163,9 @@ export default function MemberAttendanceDetail({
           </div>
           <div className="grid grid-cols-[200px_1fr] divide-x">
             <span className={labelCell}>잔여 보증금</span>
-            <span className={valueCell}>{attendance.deposit.toLocaleString()}원</span>
+            <span className={valueCell}>
+              {attendance.deposit.toLocaleString()}원
+            </span>
           </div>
         </div>
       </section>
@@ -133,12 +182,13 @@ export default function MemberAttendanceDetail({
                 <th>지각 시간</th>
                 <th>벌금</th>
                 <th>사유</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
               {paginatedItems.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="text-center text-gray-400 py-8">
+                  <td colSpan={6} className="text-center text-gray-400 py-8">
                     출결 정보가 없습니다.
                   </td>
                 </tr>
@@ -152,7 +202,7 @@ export default function MemberAttendanceDetail({
                       <span
                         className={`px-2 py-1 rounded-full text-xs ${statusStyle[item.status]}`}
                       >
-                        {statusLabel[item.status]}
+                        {AttendanceStatusText[item.status]}
                       </span>
                     </td>
                     <td className="text-gray-500">
@@ -164,6 +214,14 @@ export default function MemberAttendanceDetail({
                         : "-"}
                     </td>
                     <td className="text-gray-500">{item.reason ?? "-"}</td>
+                    <td>
+                      <button
+                        className="text-xs text-blue-500 hover:underline"
+                        onClick={() => setEditingItem(item)}
+                      >
+                        수정
+                      </button>
+                    </td>
                   </tr>
                 ))
               )}
@@ -213,5 +271,14 @@ export default function MemberAttendanceDetail({
         </button>
       </div>
     </div>
+
+    {editingItem && (
+      <EditAttendanceModal
+        item={editingItem}
+        memberId={attendance.memberId}
+        onClose={() => setEditingItem(null)}
+      />
+    )}
+    </>
   );
 }
